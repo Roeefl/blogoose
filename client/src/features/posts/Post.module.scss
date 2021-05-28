@@ -1,0 +1,8 @@
+@import 'styles/index';
+
+.post {
+  padding: 16px;
+  border: 1px solid $primary;
+  display: flex;
+  flex-direction: column;
+}
