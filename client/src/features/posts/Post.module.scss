@@ -3,6 +3,12 @@
 .post {
   padding: 16px;
   border: 1px solid $primary;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 75% 20%;
+  gap: 5%;
+
+  .content {
+    display: flex;
+    flex-direction: column;
+  }
 }

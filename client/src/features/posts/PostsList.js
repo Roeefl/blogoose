@@ -14,9 +14,9 @@ function PostsList() {
   return (
     <div className={styles.container}>
       <ul className={styles.list}>
-        {posts.map(post => (
+        {posts.map((post, index) => (
           <li key={post.id} className={styles.post}>
-            <Post language={currentLanguage.key} post={post} />
+            <Post index={index} language={currentLanguage.key} post={post} />
           </li>
         ))}
       </ul>

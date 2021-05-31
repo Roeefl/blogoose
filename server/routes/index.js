@@ -26,19 +26,21 @@ router.get('/translate', async (req, res) => {
     const data = await axios({
       method: 'post',
       baseURL: ENDPOINT,
-      // url: '/translate',
-      url: '/transliterate',
+      url: '/translate',
+      // url: '/transliterate',
       headers: {
         'Content-type': 'application/json',
+        'X-ClientTraceId': uuidv4().toString(),
         'Ocp-Apim-Subscription-Key': AZURE_KEY_1,
         'Ocp-Apim-Subscription-Region': LOCATION,
-        'X-ClientTraceId': uuidv4().toString(),
       },
       params: {
         'api-version': '3.0',
-        'language': 'he',
-        'from': 'Latn',
-        'to': 'Hebr',
+        'from': 'en',
+        'to': ['de'],
+        // 'language': 'he',
+        // 'from': 'Latn',
+        // 'to': 'Hebr',
       },
       data: [{
         text: `${title} ||| ${body}`,

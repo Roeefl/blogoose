@@ -27,6 +27,19 @@ export const addTranslationsAsync = createAsyncThunk(
   },
 );
 
+export const translatePostAsync = createAsyncThunk(
+  'posts/translatePostAsync',
+  async ({ languageFrom, languageTo, post, postIndex }) => {
+    const translations = await translatePost(languageFrom, languageTo, post);
+
+    return {
+      postIndex,
+      languageTo,
+      translations,
+    };
+  },
+);
+
 export const postsSlice = createSlice({
   name: 'posts',
   initialState,

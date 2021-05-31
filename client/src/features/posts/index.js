@@ -2,6 +2,7 @@ import postsReducer, {
   selectPosts,
   fetchPostsAsync,
   addTranslationsAsync,
+  translatePostAsync,
 } from './postsSlice';
 
 export {
@@ -9,4 +10,5 @@ export {
   selectPosts,
   fetchPostsAsync,
   addTranslationsAsync,
+  translatePostAsync,
 };
