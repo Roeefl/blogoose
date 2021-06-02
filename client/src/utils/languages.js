@@ -1,7 +1,7 @@
 export const LANGUAGE_OPTIONS = {
   la: {
-    key: 'sr-Latn',
-    label: 'Latin',
+    key: 'hu',
+    label: 'Hungarian',
   },
   en: {
     key: 'en',

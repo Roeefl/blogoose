@@ -15,6 +15,8 @@ const LOCATION = 'westeurope';
 
 router.get('/translate', async (req, res) => {
   const { languageFrom, languageTo, title, body } = req.query;
+  console.log("🚀 ~ file: index.js ~ line 18 ~ router.get ~ languageFrom", languageFrom)
+  console.log("🚀 ~ file: index.js ~ line 18 ~ router.get ~ languageTo", languageTo)
 
   if (!title || !body) {
     res
@@ -23,11 +25,36 @@ router.get('/translate', async (req, res) => {
   };
 
   try {
+    // const response = await axios({
+    //   method: 'post',
+    //   baseURL: ENDPOINT,
+    //   url: '/detect',
+    //   headers: {
+    //     'Content-type': 'application/json',
+    //     'X-ClientTraceId': uuidv4().toString(),
+    //     'Ocp-Apim-Subscription-Key': AZURE_KEY_1,
+    //     'Ocp-Apim-Subscription-Region': LOCATION,
+    //   },
+    //   params: {
+    //     'api-version': '3.0'
+    //   },
+    //   data: [{
+    //     'text': title,
+    //   }],
+    //   responseType: 'json',
+    // });
+
+    // const { data } = response;
+    // const [firstResult] = data;
+    // const { language, score } = firstResult;
+    // console.log("🚀 ~ file: index.js ~ line 48 ~ router.get ~ score", score)
+    // console.log("🚀 ~ file: index.js ~ line 48 ~ router.get ~ language", language)
+    // res.send({ score, language });
+
     const data = await axios({
       method: 'post',
       baseURL: ENDPOINT,
       url: '/translate',
-      // url: '/transliterate',
       headers: {
         'Content-type': 'application/json',
         'X-ClientTraceId': uuidv4().toString(),
@@ -36,14 +63,12 @@ router.get('/translate', async (req, res) => {
       },
       params: {
         'api-version': '3.0',
-        'from': 'en',
-        'to': ['de'],
-        // 'language': 'he',
-        // 'from': 'Latn',
-        // 'to': 'Hebr',
+        'from': [languageFrom],
+        'to': [languageTo],
       },
       data: [{
-        text: `${title} ||| ${body}`,
+        text: title,
+        // text: `${title} ||| ${body}`,
       }],
       responseType: 'json'
     }).then(res => res.data);
