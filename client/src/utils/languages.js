@@ -1,11 +1,15 @@
 export const LANGUAGE_OPTIONS = {
-  la: {
+  hu: {
     key: 'hu',
     label: 'Hungarian',
   },
-  en: {
-    key: 'en',
-    label: 'English',
+  fr: {
+    key: 'fr',
+    label: 'French',
+  },
+  de: {
+    key: 'de',
+    label: 'German',
   },
   he: {
     key: 'he',
@@ -13,4 +17,4 @@ export const LANGUAGE_OPTIONS = {
   },
 };
 
-export const DEFAULT_LANGUAGE_KEY = 'la';
+export const DEFAULT_LANGUAGE_KEY = 'hu';

@@ -1,9 +1,9 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { fetchPosts, translatePost } from './postsAPI';
+import { fetchPosts, translatePosts, translatePost } from './postsAPI';
 
 const initialState = {
   isLoading: false,
-  posts: [],
+  posts: {},
 };
 
 export const fetchPostsAsync = createAsyncThunk(
@@ -14,13 +14,28 @@ export const fetchPostsAsync = createAsyncThunk(
   },
 );
 
-export const addTranslationsAsync = createAsyncThunk(
-  'posts/addTranslationsAsync',
-  async ({ languageFrom, languageTo, post, postIndex }) => {
+export const translatePostsAsync = createAsyncThunk(
+  'posts/translatePostsAsync',
+  async ({ languageFrom, languageTo, posts = [] }) => {
+    const translatedPosts = await translatePosts(languageFrom, languageTo, posts);
+
+    return {
+      translatedPosts
+    };
+  },
+);
+
+export const addPostTranslations = createAsyncThunk(
+  'posts/addPostTranslations',
+  async ({ languageFrom, languageTo, postKey, post }) => {
+    if (post.translations[languageTo]) {
+      return {};
+    }
+    
     const translations = await translatePost(languageFrom, languageTo, post);
 
     return {
-      postIndex,
+      postKey,
       languageTo,
       translations,
     };
@@ -29,11 +44,11 @@ export const addTranslationsAsync = createAsyncThunk(
 
 export const translatePostAsync = createAsyncThunk(
   'posts/translatePostAsync',
-  async ({ languageFrom, languageTo, post, postIndex }) => {
+  async ({ languageFrom, languageTo, postKey, post }) => {
     const translations = await translatePost(languageFrom, languageTo, post);
 
     return {
-      postIndex,
+      postKey,
       languageTo,
       translations,
     };
@@ -43,7 +58,15 @@ export const translatePostAsync = createAsyncThunk(
 export const postsSlice = createSlice({
   name: 'posts',
   initialState,
-  reducers: {},
+  reducers: {
+    deletePost: (state, { payload: postKey }) => {
+      delete state.posts[postKey];
+    },
+    ratePost: (state, { payload }) => {
+      const { postKey, value } = payload;
+      state.posts[postKey].rating += value;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchPostsAsync.pending, (state) => {
@@ -53,23 +76,21 @@ export const postsSlice = createSlice({
         state.isLoading = false;
         state.posts = posts;
       })
-      .addCase(addTranslationsAsync.fulfilled, (state, { payload }) => {
+      .addCase(addPostTranslations.fulfilled, (state, { payload }) => {
         const {
-          postIndex,
+          postKey,
           languageTo,
           translations,
         } = payload;
 
         if (!translations || !translations.length) return;
 
-        const currentPost = state.posts[postIndex];
+        const currentPost = state.posts[postKey];
 
         const [currentTranslation] = translations;
-        const { text } = currentTranslation;
+        const { title, body } = currentTranslation;
 
-        const [title, body] = text.split('|||');
-
-        state.posts[postIndex] = {
+        state.posts[postKey] = {
           ...currentPost,
           translations: {
             ...currentPost.translations,
@@ -79,11 +100,29 @@ export const postsSlice = createSlice({
             },
           },
         }
-      });
+      })
+      .addCase(translatePostsAsync.fulfilled, (state, { payload }) => {
+        const { translatedPosts } = payload;
+
+        translatedPosts.forEach((translatedPost, index) => {
+          const currentPost = state.posts[index];
+
+          state.posts[index] = {
+            ...currentPost,
+            translations: {
+              ...currentPost.translations,
+              [translatedPost.languageTo]: {
+                title: translatedPost.title,
+                body: translatedPost.body,
+              },
+            },
+          }
+        })
+      })
   },
 });
 
-// export const { increment, decrement, incrementByAmount } = postsSlice.actions;
+export const { deletePost, ratePost } = postsSlice.actions;
 
 export const selectIsLoading = (state) => state.posts.isLoading;
 export const selectPosts = (state) => state.posts.posts;

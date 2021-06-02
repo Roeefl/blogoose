@@ -1,14 +1,29 @@
 @import 'styles/index';
 
-.post {
-  padding: 16px;
-  border: 1px solid $primary;
-  display: grid;
-  grid-template-columns: 75% 20%;
-  gap: 5%;
+.container {
+  display: flex;
+  align-items: center;
 
-  .content {
+  .actions {
+    flex: 1;
+  }
+  
+  .post {
+    flex: 8;
+    padding: 16px;
+    border: 1px solid $primary;
     display: flex;
     flex-direction: column;
+  }
+
+  .rate {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .rating {
+      text-align: center;
+    }
   }
 }

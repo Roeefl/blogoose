@@ -1,14 +1,20 @@
 import postsReducer, {
   selectPosts,
+  deletePost,
+  ratePost,
   fetchPostsAsync,
-  addTranslationsAsync,
+  addPostTranslations,
   translatePostAsync,
+  translatePostsAsync,
 } from './postsSlice';
 
 export {
   postsReducer,
   selectPosts,
-  fetchPostsAsync,
-  addTranslationsAsync,
+  deletePost,
+  ratePost,
+  fetchPostsAsync as fetchPosts,
+  addPostTranslations,
   translatePostAsync,
+  translatePostsAsync,
 };

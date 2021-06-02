@@ -1,13 +1,10 @@
-import { useDispatch, useSelector } from 'react-redux'; 
 import PropTypes from 'prop-types';
-import { TranslateIcon } from 'evergreen-ui';
-import { selectPreviousLanguage, selectLanguage } from 'features/language';
-import { translatePostAsync } from 'features/posts';
+import { DeleteIcon, ThumbsUpIcon, ThumbsDownIcon } from 'evergreen-ui';
 import { LANGUAGE_OPTIONS, DEFAULT_LANGUAGE_KEY } from 'utils/languages';
-import Button from 'components/Button';
+import IconButton from 'components/IconButton';
 import styles from './Post.module.scss';
 
-const Post = ({ index, language, post }) => {
+const Post = ({ language, post, onDelete, onRate }) => {
   const {
     id,
     userId,
@@ -15,27 +12,17 @@ const Post = ({ index, language, post }) => {
     translations = {},
     title,
     body,
+    rating,
   } = post;
-
-  const dispatch = useDispatch();
-
-  const previousLanguage = useSelector(selectPreviousLanguage);
-  const currentLanguage = useSelector(selectLanguage);
 
   const currentTranslation = translations[language] || {};
 
-  const onTranslateClick = () => dispatch(
-    translatePostAsync({
-      languageFrom: previousLanguage.key,
-      languageTo: currentLanguage.key,
-      postIndex: index,
-      post,
-    })
-  );
-
   return (
-    <div className={styles.post}>
-      <div className={styles.content}>
+    <div className={styles.container}>
+      <div className={styles.actions}>
+        <IconButton appearance="minimal" size="large" iconBefore={DeleteIcon} onClick={onDelete} />
+      </div>
+      <div className={styles.post}>
         <h3 className={styles.title}>
           {currentTranslation.title || title}
         </h3>
@@ -46,17 +33,22 @@ const Post = ({ index, language, post }) => {
           {currentTranslation.body || body}
         </p>
       </div>
-      <Button appearance="primary" size="medium" iconBefore={TranslateIcon} padding={16} onClick={onTranslateClick}>
-        Translate Me
-      </Button>
+      <div className={styles.rate}>
+        <IconButton appearance="minimal" size="large" iconBefore={ThumbsUpIcon} onClick={() => onRate(1)} />
+        <span className={styles.rating}>
+          {rating || 0}
+        </span>
+        <IconButton appearance="minimal" size="large" iconBefore={ThumbsDownIcon} onClick={() => onRate(-1)} />
+      </div>
     </div>
   );
 }
 
 Post.propTypes = {
-  index: PropTypes.number.isRequired,
   language: PropTypes.string,
   post: PropTypes.object,
+  onDelete: PropTypes.func.isRequired,
+  onRate: PropTypes.func.isRequired,
 };
 
 Post.defaultProps = {
