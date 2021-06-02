@@ -1,5 +1,6 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Spinner } from 'evergreen-ui';
 import { selectLanguage } from 'features/language';
 import { deletePost, ratePost } from 'features/posts';
 import { selectIsLoading, selectPosts } from './postsSlice';
@@ -7,11 +8,11 @@ import Post from './Post';
 import List from 'components/List';
 import styles from './PostsList.module.scss';
 
-function PostsList() {
+export default function PostsList() {
   const dispatch = useDispatch();
 
   const currentLanguage = useSelector(selectLanguage);
-  const isLoading = useSelector(selectIsLoading);
+  const isLoadingPosts = useSelector(selectIsLoading);
   const posts = useSelector(selectPosts);
 
   const onDeletePost = (postKey) => dispatch(deletePost(postKey));
@@ -24,18 +25,22 @@ function PostsList() {
 
   return (
     <div className={styles.container}>
-      <List height={600} rowHeight={120} items={postsArray} renderItem={(post) => (
-        <li key={post.key} className={styles.post}>
+      {isLoadingPosts &&
+        <div className={styles.loading}>
+          <Spinner size={160} />
+        </div>
+      }
+      {!isLoadingPosts &&
+        <List height={700} rowHeight={140} items={postsArray} renderItem={(post) => (
           <Post
+            key={post.key}
             language={currentLanguage.key} 
             post={post}
             onDelete={() => onDeletePost(post.key)} 
             onRate={(value) => onRatePost(post.key, value)}
           />
-        </li>
-      )} />
+        )} />
+      }
     </div>
   );
 }
-
-export default PostsList;

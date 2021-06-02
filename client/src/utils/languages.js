@@ -1,6 +1,8 @@
+export const DEFAULT_LANGUAGE_KEY = 'hu';
+
 export const LANGUAGE_OPTIONS = {
-  hu: {
-    key: 'hu',
+  [DEFAULT_LANGUAGE_KEY]: {
+    key: DEFAULT_LANGUAGE_KEY,
     label: 'Hungarian',
   },
   fr: {
@@ -17,4 +19,3 @@ export const LANGUAGE_OPTIONS = {
   },
 };
 
-export const DEFAULT_LANGUAGE_KEY = 'hu';

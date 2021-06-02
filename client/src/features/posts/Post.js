@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { DeleteIcon, ThumbsUpIcon, ThumbsDownIcon } from 'evergreen-ui';
+import { Spinner, DeleteIcon, ThumbsUpIcon, ThumbsDownIcon } from 'evergreen-ui';
 import { LANGUAGE_OPTIONS, DEFAULT_LANGUAGE_KEY } from 'utils/languages';
 import IconButton from 'components/IconButton';
 import styles from './Post.module.scss';
@@ -8,6 +8,7 @@ const Post = ({ language, post, onDelete, onRate }) => {
   const {
     id,
     userId,
+    isLoadingTranslation = false,
     date,
     translations = {},
     title,
@@ -16,6 +17,14 @@ const Post = ({ language, post, onDelete, onRate }) => {
   } = post;
 
   const currentTranslation = translations[language] || {};
+  
+  if (isLoadingTranslation)  {
+    return (
+      <div className={styles.spinner}>
+        <Spinner size={48} />
+      </div>
+    );
+  }
 
   return (
     <div className={styles.container}>

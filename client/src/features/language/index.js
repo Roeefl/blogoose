@@ -1,10 +1,10 @@
 import languageReducer, {
   selectLanguage,
-  setLanguage
+  setLanguage,
 } from './languageSlice';
 
 export {
   languageReducer,
   selectLanguage,
-  setLanguage
+  setLanguage,
 };

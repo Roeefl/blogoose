@@ -1,17 +1,27 @@
 @import 'styles/index';
 
+.spinner {
+  height: 100%;
+  width: 100%;
+  border-bottom: 1px solid lightgray;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .container {
+  height: 100%;
   display: flex;
   align-items: center;
-
+  
   .actions {
     flex: 1;
   }
   
   .post {
-    flex: 8;
-    padding: 16px;
     border: 1px solid $primary;
+    flex: 8;
+    padding: $spacer / 2;
     display: flex;
     flex-direction: column;
   }

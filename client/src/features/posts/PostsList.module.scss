@@ -1,15 +1,10 @@
+@import 'styles/index';
 
 .container {
-  padding: 16px;
-
-  .list {
-    display: flex;
-    flex-direction: column;
-  }
+  padding: 0;
 }
 
-.post {
-  & + & {
-    margin-top: 16px;
-  }
+.loading {
+  height: 70vh;
+  @include centralize();
 }

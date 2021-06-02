@@ -37,26 +37,6 @@ class ApiService {
       console.error(err);
     }
   }
-
-  static async translatePosts(languageFrom, languageTo, posts) {
-    const url = `${apiURL}/translate-posts`;
-
-    try {
-      const { data = {} } = await axios.post(
-        url, {
-          languageFrom,
-          languageTo,
-          posts
-        }
-      );
-
-      const { translatedPosts = [] } = data;
-      console.log("🚀 ~ file: api.js ~ line 32 ~ ApiService ~ translatePosts ~ translatedPosts", translatedPosts)
-      return translatedPosts;
-    } catch (err) {
-      console.error(err);
-    }
-  }
 }
 
 export default ApiService;

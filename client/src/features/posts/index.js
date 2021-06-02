@@ -5,7 +5,6 @@ import postsReducer, {
   fetchPostsAsync,
   addPostTranslations,
   translatePostAsync,
-  translatePostsAsync,
 } from './postsSlice';
 
 export {
@@ -16,5 +15,4 @@ export {
   fetchPostsAsync as fetchPosts,
   addPostTranslations,
   translatePostAsync,
-  translatePostsAsync,
 };

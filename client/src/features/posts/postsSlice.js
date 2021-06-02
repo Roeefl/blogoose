@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { fetchPosts, translatePosts, translatePost } from './postsAPI';
+import { fetchPosts, translatePost } from './postsAPI';
 
 const initialState = {
   isLoading: false,
@@ -14,26 +14,17 @@ export const fetchPostsAsync = createAsyncThunk(
   },
 );
 
-export const translatePostsAsync = createAsyncThunk(
-  'posts/translatePostsAsync',
-  async ({ languageFrom, languageTo, posts = [] }) => {
-    const translatedPosts = await translatePosts(languageFrom, languageTo, posts);
-
-    return {
-      translatedPosts
-    };
-  },
-);
-
 export const addPostTranslations = createAsyncThunk(
   'posts/addPostTranslations',
-  async ({ languageFrom, languageTo, postKey, post }) => {
+  async ({ languageFrom, languageTo, postKey, post }, { dispatch }) => {
     if (post.translations[languageTo]) {
       return {};
     }
     
+    dispatch(togglePostLoading(postKey));
     const translations = await translatePost(languageFrom, languageTo, post);
-
+    dispatch(togglePostLoading(postKey));
+    
     return {
       postKey,
       languageTo,
@@ -59,6 +50,10 @@ export const postsSlice = createSlice({
   name: 'posts',
   initialState,
   reducers: {
+    togglePostLoading: (state, { payload: postKey }) => {
+      const { isLoadingTranslation = false } = state.posts[postKey];
+      state.posts[postKey].isLoadingTranslation = !isLoadingTranslation;
+    },
     deletePost: (state, { payload: postKey }) => {
       delete state.posts[postKey];
     },
@@ -75,6 +70,9 @@ export const postsSlice = createSlice({
       .addCase(fetchPostsAsync.fulfilled, (state, { payload: posts }) => {
         state.isLoading = false;
         state.posts = posts;
+      })
+      .addCase(addPostTranslations.pending, (state, { payload }) => {
+        console.log(payload);
       })
       .addCase(addPostTranslations.fulfilled, (state, { payload }) => {
         const {
@@ -101,28 +99,10 @@ export const postsSlice = createSlice({
           },
         }
       })
-      .addCase(translatePostsAsync.fulfilled, (state, { payload }) => {
-        const { translatedPosts } = payload;
-
-        translatedPosts.forEach((translatedPost, index) => {
-          const currentPost = state.posts[index];
-
-          state.posts[index] = {
-            ...currentPost,
-            translations: {
-              ...currentPost.translations,
-              [translatedPost.languageTo]: {
-                title: translatedPost.title,
-                body: translatedPost.body,
-              },
-            },
-          }
-        })
-      })
   },
 });
 
-export const { deletePost, ratePost } = postsSlice.actions;
+export const { deletePost, ratePost, togglePostLoading } = postsSlice.actions;
 
 export const selectIsLoading = (state) => state.posts.isLoading;
 export const selectPosts = (state) => state.posts.posts;

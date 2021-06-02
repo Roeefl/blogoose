@@ -1,18 +1,43 @@
 @import 'styles/index';
 
+$logo-size: 40px;
+
 .app {
   .header {
     padding: $spacer;
     background: $primary;
     color: white;
     display: flex;
+    flex-direction: column;
     justify-content: center;
+    align-items: center;
+
+    .title {
+      margin-bottom: $spacer / 2;
+      display: flex;
+      align-items: center;
+      
+      .logo {
+        margin-right: $spacer;
+
+        .image {
+          width: $logo-size;
+          height: $logo-size;
+        }
+      }
+    }
+
+    .devNote {
+      font-style: italic;
+      font-weight: 300;
+    }
   }
 
   .content {
-    padding: $spacer * 2;
+    padding: $spacer;
     display: grid;
-    grid-template-columns: 75% 25%;
+    grid-template-columns: 70% 25%;
+    gap: 5%;
 
     .sidebar {
       padding: 0;
